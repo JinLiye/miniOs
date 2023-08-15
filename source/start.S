@@ -13,3 +13,8 @@
  	.text
 _start: 
 	jmp .
+
+	.org 0x1fe				//510
+	; 在第一个扇区后添加0xaa.0x55，使得bios将其加载到0x7c00
+	.byte 0x55,0xaa			//unsinged char
+

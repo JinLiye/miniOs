@@ -1,7 +1,5 @@
 # miniOS
 
-[Badges]
-
 ## Introduction
 
 ### Summary
