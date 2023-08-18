@@ -29,10 +29,31 @@ read_self_all:
 	int $0x13
 	jc read_self_all
 
-	jmp .
+	cli					//关中断
+	lgdt gdt_desc		//读相应数据到gdtr, 注：加中括号不识别
+	mov $1, %eax
+	lmsw %ax			//讲CR0寄存器PE设为1, 表示打开保护模式
+	jmp $KERNEL_COOE_SEG, $_start_32			// 这个跳转会将CS(代码段寄存器)设为8, 跳转, 之后CPU进入保护模式
+
+	
 	.org 0x1fe				//510
 	.byte 0x55,0xaa			//unsinged char
 
+	.code32					//生成32位指令
+	.text
+
 _start_32:
-	.fill 64*1024, 1, 0x22
+	mov $KERNEL_DATA_SEG ,%ax
+	mov %ax,%ds
+	mov %ax,%es
+	mov %ax,%ss
+	mov %ax,%gs
+	mov %ax,%fs
+	mov $_start, %esp
+	jmp .
+
+
+gdt_desc:
+	.word (256*8) - 1		//-1: 16位界限
+	.long gdt_table
 
