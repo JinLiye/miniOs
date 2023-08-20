@@ -47,7 +47,7 @@
                 }
             ],
             // gdb连接后的设置
-            "postRemoteConnectCommands": [  
+            "postRemoteConnectCommands": [
                 {
                     "description": "运行至0x7c00",
                     "text": "-exec-until *0x7c00",

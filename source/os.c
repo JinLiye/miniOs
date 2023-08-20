@@ -6,6 +6,21 @@
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int uint32_t;
+
+// 表项存在
+#define PDE_P (1 << 0)
+// 可读
+#define PDE_W (1 << 1)
+// 用户模式
+#define PDE_U (1 << 2)
+// 以4MB做映射
+#define PDE_PS (1 << 7)
+
+// 定义页目录表
+uint32_t pg_dir[1024] __attribute__((aligned(4096))) = {
+    [0] = (0) | PDE_P | PDE_W | PDE_U | PDE_PS,
+};
+
 // 定义GDT表结构
 struct
 {
