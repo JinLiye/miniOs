@@ -50,6 +50,22 @@ _start_32:
 	mov %ax,%gs
 	mov %ax,%fs
 	mov $_start, %esp
+	//将cr3指向页目录表
+	mov $pg_dir, %eax
+	mov %eax, %cr3
+
+	//将cr4寄存器第四位置1，该位控制4Mb映射关系
+	mov %cr4, %eax
+	orl $(1<<4) ,%eax
+	mov %eax, %cr4
+
+	mov %cr0, %eax
+	//控制分页机制的位
+	orl $(1<<31) ,%eax
+	mov %eax, %cr0
+
+
+
 	jmp .
 
 
