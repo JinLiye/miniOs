@@ -10,28 +10,30 @@ ELF Header:
   Version:                           0x1
   Entry point address:               0x7c00
   Start of program headers:          52 (bytes into file)
-  Start of section headers:          4316 (bytes into file)
+  Start of section headers:          20200 (bytes into file)
   Flags:                             0x0
   Size of this header:               52 (bytes)
   Size of program headers:           32 (bytes)
-  Number of program headers:         1
+  Number of program headers:         2
   Size of section headers:           40 (bytes)
-  Number of section headers:         11
-  Section header string table index: 10
+  Number of section headers:         13
+  Section header string table index: 12
 
 Section Headers:
   [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
   [ 0]                   NULL            00000000 000000 000000 00      0   0  0
-  [ 1] .text             PROGBITS        00007c00 000c00 000200 00  AX  0   0  1
-  [ 2] .comment          PROGBITS        00000000 000e00 000011 01  MS  0   0  1
-  [ 3] .debug_aranges    PROGBITS        00000000 000e18 000020 00      0   0  8
-  [ 4] .debug_info       PROGBITS        00000000 000e38 000066 00      0   0  1
-  [ 5] .debug_abbrev     PROGBITS        00000000 000e9e 000014 00      0   0  1
-  [ 6] .debug_line       PROGBITS        00000000 000eb2 00003f 00      0   0  1
-  [ 7] .debug_str        PROGBITS        00000000 000ef1 000092 01  MS  0   0  1
-  [ 8] .symtab           SYMTAB          00000000 000f84 0000d0 10      9   9  4
-  [ 9] .strtab           STRTAB          00000000 001054 00001e 00      0   0  1
-  [10] .shstrtab         STRTAB          00000000 001072 00006a 00      0   0  1
+  [ 1] .text             PROGBITS        00007c00 000c00 00025c 00  AX  0   0  1
+  [ 2] .eh_frame         PROGBITS        00007e5c 000e5c 000038 00   A  0   0  4
+  [ 3] .data             PROGBITS        00008000 001000 003800 00  WA  0   0 4096
+  [ 4] .comment          PROGBITS        00000000 004800 000011 01  MS  0   0  1
+  [ 5] .debug_aranges    PROGBITS        00000000 004818 000040 00      0   0  8
+  [ 6] .debug_info       PROGBITS        00000000 004858 000189 00      0   0  1
+  [ 7] .debug_abbrev     PROGBITS        00000000 0049e1 0000c9 00      0   0  1
+  [ 8] .debug_line       PROGBITS        00000000 004aaa 0000a3 00      0   0  1
+  [ 9] .debug_str        PROGBITS        00000000 004b4d 000126 01  MS  0   0  1
+  [10] .symtab           SYMTAB          00000000 004c74 000180 10     11  16  4
+  [11] .strtab           STRTAB          00000000 004df4 00007a 00      0   0  1
+  [12] .shstrtab         STRTAB          00000000 004e6e 00007a 00      0   0  1
 Key to Flags:
   W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
   L (link order), O (extra OS processing required), G (group), T (TLS),
@@ -42,11 +44,13 @@ There are no section groups in this file.
 
 Program Headers:
   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
-  LOAD           0x000000 0x00007000 0x00007000 0x00e00 0x00e00 R E 0x1000
+  LOAD           0x000000 0x00007000 0x00007000 0x00e94 0x00e94 R E 0x1000
+  LOAD           0x001000 0x00008000 0x00008000 0x03800 0x03800 RW  0x1000
 
  Section to Segment mapping:
   Segment Sections...
-   00     .text 
+   00     .text .eh_frame 
+   01     .data 
 
 There is no dynamic section in this file.
 
@@ -54,20 +58,31 @@ There are no relocations in this file.
 
 The decoding of unwind sections for machine type Intel 80386 is not currently supported.
 
-Symbol table '.symtab' contains 13 entries:
+Symbol table '.symtab' contains 24 entries:
    Num:    Value  Size Type    Bind   Vis      Ndx Name
      0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
      1: 00007c00     0 SECTION LOCAL  DEFAULT    1 
-     2: 00000000     0 SECTION LOCAL  DEFAULT    2 
-     3: 00000000     0 SECTION LOCAL  DEFAULT    3 
+     2: 00007e5c     0 SECTION LOCAL  DEFAULT    2 
+     3: 00008000     0 SECTION LOCAL  DEFAULT    3 
      4: 00000000     0 SECTION LOCAL  DEFAULT    4 
      5: 00000000     0 SECTION LOCAL  DEFAULT    5 
      6: 00000000     0 SECTION LOCAL  DEFAULT    6 
      7: 00000000     0 SECTION LOCAL  DEFAULT    7 
-     8: 00000000     0 FILE    LOCAL  DEFAULT  ABS os.c
-     9: 00007c00     0 NOTYPE  GLOBAL DEFAULT    1 _start
-    10: 00008e00     0 NOTYPE  GLOBAL DEFAULT    1 __bss_start
-    11: 00008e00     0 NOTYPE  GLOBAL DEFAULT    1 _edata
-    12: 00008e00     0 NOTYPE  GLOBAL DEFAULT    1 _end
+     8: 00000000     0 SECTION LOCAL  DEFAULT    8 
+     9: 00000000     0 SECTION LOCAL  DEFAULT    9 
+    10: 00000000     0 FILE    LOCAL  DEFAULT  ABS start.o
+    11: 00007c13     0 NOTYPE  LOCAL  DEFAULT    1 read_self_all
+    12: 00007e00     0 NOTYPE  LOCAL  DEFAULT    1 _start_32
+    13: 00007e36     0 NOTYPE  LOCAL  DEFAULT    1 gdt_desc
+    14: 00000000     0 FILE    LOCAL  DEFAULT  ABS os.c
+    15: 0000a000  4096 OBJECT  LOCAL  DEFAULT    3 page_table
+    16: 0000b000  2048 OBJECT  GLOBAL DEFAULT    3 gdt_table
+    17: 00008000  4096 OBJECT  GLOBAL DEFAULT    3 map_phy_buffer
+    18: 00007e3c    32 FUNC    GLOBAL DEFAULT    1 os_init
+    19: 00007c00     0 NOTYPE  GLOBAL DEFAULT    1 _start
+    20: 0000b800     0 NOTYPE  GLOBAL DEFAULT    3 __bss_start
+    21: 00009000  4096 OBJECT  GLOBAL DEFAULT    3 pg_dir
+    22: 0000b800     0 NOTYPE  GLOBAL DEFAULT    3 _edata
+    23: 0000b800     0 NOTYPE  GLOBAL DEFAULT    3 _end
 
 No version information found in this file.

@@ -11,6 +11,8 @@
 
 	// 以下是代码区
  	.text
+	// 声明os_init在外部定义
+	.extern os_init
 _start:
 	mov $0,%ax
 	mov %ax,%ds
@@ -50,6 +52,9 @@ _start_32:
 	mov %ax,%gs
 	mov %ax,%fs
 	mov $_start, %esp
+
+	call os_init
+
 	//将cr3指向页目录表
 	mov $pg_dir, %eax
 	mov %eax, %cr3
