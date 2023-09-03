@@ -36,8 +36,33 @@ struct
     [KERNEL_DATA_SEG / 8] = {0xffff, 0x0000, 0x9200, 0x00cf},
 };
 
+void outb(uint8_t data, uint16_t port)
+{
+    __asm__ __volatile__("outb %[v], %[p]" ::[p] "d"(port), [v] "a"(data));
+}
+
 void os_init(void)
 {
+    // 初始化8259主片从片
+    outb(0x11, 0x20);
+    outb(0x11, 0xA0);
+    outb(0x20, 0x21);
+    outb(0x28, 0xA1);
+    outb(1 << 2, 0x21);
+    outb(2, 0xa1);
+    // 设置工作模式
+    outb(0x1, 0x21);
+    outb(0x1, 0xA1);
+    outb(0xfe, 0x21);
+    outb(0xff, 0xA1);
+
+    // 配置8253
+    // 100ms产生一次中断
+    int tmo = 1193180 / 100;
+    outb(0x36, 0x43);
+    outb((uint8_t)tmo, 0x40);
+    outb(tmo >> 8, 0x40);
+
     pg_dir[MAP_ADDR >> 22] = (uint32_t)page_table | PDE_P | PDE_W | PDE_U;
     page_table[(MAP_ADDR >> 12) & 0x3FF] = (uint32_t)map_phy_buffer | PDE_P | PDE_W | PDE_U;
 }
