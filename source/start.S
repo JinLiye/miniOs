@@ -4,7 +4,7 @@
 	#include "os.h"
 
 	// 声明本地以下符号是全局的，在其它源文件中可以访问
-	.global _start
+	.global _start, timer_int
 
 	// 指定以下的代码生成16位的机器指令，这样才能在启动时的实模式下运行
   	.code16
@@ -33,6 +33,7 @@ read_self_all:
 
 	cli					//关中断
 	lgdt gdt_desc		//读相应数据到gdtr, 注：加中括号不识别
+	lidt idt_desc		//读相应数据到idtr
 	mov $1, %eax
 	lmsw %ax			//讲CR0寄存器PE设为1, 表示打开保护模式
 	jmp $KERNEL_COOE_SEG, $_start_32			// 这个跳转会将CS(代码段寄存器)设为8, 跳转, 之后CPU进入保护模式
@@ -69,12 +70,29 @@ _start_32:
 	orl $(1<<31) ,%eax
 	mov %eax, %cr0
 
-
+	sti //开中断
 
 	jmp .
+
+//中断处理函数
+timer_int:
+	push %ds
+	pusha
+
+	mov $0x20,%al
+	outb %al,$0x02
+
+	popa
+	pop %ds
+	iret
 
 
 gdt_desc:
 	.word (256*8) - 1		//-1: 16位界限
 	.long gdt_table
+
+idt_desc:
+	.word (256*8) - 1		//-1: 16位界限
+	.long idt_table
+
 
